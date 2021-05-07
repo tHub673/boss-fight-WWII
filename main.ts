@@ -58,7 +58,9 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     scene.cameraShake(3, 50)
 })
 function level3 () {
-	
+    tiles.setTilemap(tilemap`level4`)
+    soldier.setPosition(30, 415)
+    attackers.setPosition(700, 460)
 }
 function Level1 () {
     tiles.setTilemap(tilemap`level1`)

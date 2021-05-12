@@ -3,6 +3,7 @@ namespace SpriteKind {
     export const Monkey = SpriteKind.create()
     export const ball = SpriteKind.create()
     export const Boss = SpriteKind.create()
+    export const bossBullets = SpriteKind.create()
 }
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     soldier.vy = -70
@@ -67,6 +68,7 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Boss, function (sprite, othe
     statusbar.value += -10
 })
 function level3 () {
+    final_level = true
     tiles.setTilemap(tilemap`level4`)
     soldier.setPosition(30, 415)
     Final_Boss = sprites.create(img`
@@ -196,8 +198,31 @@ function Level1 () {
 }
 statusbars.onZero(StatusBarKind.Health, function (status) {
     Final_Boss.destroy(effects.disintegrate, 500)
+    projectile2.destroy(effects.spray, 100)
 })
-sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, otherSprite) {
+controller.A.onEvent(ControllerButtonEvent.Repeated, function () {
+    projectile = sprites.createProjectileFromSprite(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . 2 2 . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `, soldier, 650, 0)
+    projectile.startEffect(effects.fire, 50)
+    scene.cameraShake(3, 50)
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.bossBullets, function (sprite, otherSprite) {
     soldier.destroy(effects.disintegrate, 500)
     game.over(false, effects.melt)
 })
@@ -218,6 +243,8 @@ let projectile: Sprite = null
 let level2End: Sprite = null
 let attackers: Sprite = null
 let soldier: Sprite = null
+let final_level = false
+final_level = false
 soldier = sprites.create(img`
     ..............................
     ..............................
@@ -306,4 +333,28 @@ game.onUpdateInterval(1000, function () {
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         `, attackers, -50, 0)
+    projectile2.setKind(SpriteKind.bossBullets)
+})
+game.onUpdateInterval(500, function () {
+    if (final_level) {
+        projectile2 = sprites.createProjectileFromSprite(img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            2 2 2 . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            2 2 2 . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `, Final_Boss, -50, 0)
+        projectile2.setKind(SpriteKind.bossBullets)
+    }
 })

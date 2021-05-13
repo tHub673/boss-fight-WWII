@@ -67,6 +67,9 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Boss, function (sprite, otherSprite) {
     statusbar.value += -10
 })
+sprites.onDestroyed(SpriteKind.Boss, function (sprite) {
+    projectile3.destroy(effects.spray, 100)
+})
 function level3 () {
     final_level = true
     tiles.setTilemap(tilemap`level4`)
@@ -123,6 +126,7 @@ function level3 () {
         ...............88888888888................88888888
         ...............8888888888.................88888888
         `, SpriteKind.Boss)
+    bossAlive = true
     Final_Boss.setPosition(700, 440)
     statusbar = statusbars.create(20, 4, StatusBarKind.Health)
     statusbar.value = 100
@@ -198,7 +202,7 @@ function Level1 () {
 }
 statusbars.onZero(StatusBarKind.Health, function (status) {
     Final_Boss.destroy(effects.disintegrate, 500)
-    projectile2.destroy(effects.spray, 100)
+    bossAlive = false
 })
 controller.A.onEvent(ControllerButtonEvent.Repeated, function () {
     projectile = sprites.createProjectileFromSprite(img`
@@ -238,12 +242,15 @@ let projectile2: Sprite = null
 let level1End: Sprite = null
 let Level3End: Sprite = null
 let Final_Boss: Sprite = null
+let projectile3: Sprite = null
 let statusbar: StatusBarSprite = null
 let projectile: Sprite = null
 let level2End: Sprite = null
 let attackers: Sprite = null
 let soldier: Sprite = null
 let final_level = false
+let bossAlive = false
+bossAlive = false
 final_level = false
 soldier = sprites.create(img`
     ..............................
@@ -336,8 +343,8 @@ game.onUpdateInterval(1000, function () {
     projectile2.setKind(SpriteKind.bossBullets)
 })
 game.onUpdateInterval(500, function () {
-    if (final_level) {
-        projectile2 = sprites.createProjectileFromSprite(img`
+    if (final_level && bossAlive) {
+        projectile3 = sprites.createProjectileFromSprite(img`
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
             2 2 2 . . . . . . . . . . . . . 
@@ -355,6 +362,6 @@ game.onUpdateInterval(500, function () {
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
             `, Final_Boss, -50, 0)
-        projectile2.setKind(SpriteKind.bossBullets)
+        projectile3.setKind(SpriteKind.bossBullets)
     }
 })

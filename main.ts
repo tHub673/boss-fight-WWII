@@ -223,7 +223,7 @@ controller.A.onEvent(ControllerButtonEvent.Repeated, function () {
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         `, soldier, 650, 0)
-    projectile.startEffect(effects.fire, 50)
+    projectile.startEffect(effects.disintegrate, 50)
     scene.cameraShake(3, 50)
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.bossBullets, function (sprite, otherSprite) {
